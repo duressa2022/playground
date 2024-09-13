@@ -6,7 +6,7 @@ class Enviroment:
     def __init__(self,size):
         self.grid_size=size
         self.state=(0,0)
-        self.goal=(3,3)
+        self.goal=(self.grid_size-1,self.grid_size-1)
         self.actions=["up","down","left","right"]
     def reset(self):
         self.state=(0,0)
