@@ -5,46 +5,48 @@ def Regression_based_Batch(X,Y,learning_rate,episodes):
     X=np.array(X)
     Y=np.array(Y)
 
-    number_feature=len(X[0])
-    weights=np.zeros(number_feature)
+    number_features=len(X[0])
+    weights=np.zeros(number_features)
     bias=0
 
     for episode in range(episodes):
-        predicated=np.dot(X,weights)+bias
+        predicted=np.dot(X,weights)+bias
 
-        dw=1/(len(Y))*np.dot(X.T,predicated-Y)
-        db=1/(len(Y))*np.sum(predicated-Y)
+        dw=1/(len(Y))*np.dot(X.T,predicted-Y)
+        db=1/(len(Y))*np.sum(predicted-Y)
 
         weights=weights-learning_rate*dw
         bias=bias-learning_rate*db
 
-        if episode%100==0:
+        if episode%100:
+            print("=======================")
+            print("current episode: {}".format(episode))
             print("weights: ",weights)
-            print("bias:",bias)
-            print("Episode for: ",episode)
-            sleep(0.5)
-    return weights,bias
+            print("bias: ",bias)
+            print("========================")
+        return weights,bias
 
 # test code 
 X=[
     [3,4,2,5],
-    [150,200,120,250],
-    [150,200,120,250],
+    [15,20,12,25],
+    [15,20,12,25],
     [10,5,20,3]
 ]
 
 Y=[ 
-    300000,
-    450000,
-    220000,
-    550000
+    30,
+    45,
+    22,
+    55
 ]
 
-learning_rate=0.1
+learning_rate=0.0001
 episodes=1000
 
 weights,bias=Regression_based_Batch(X,Y,learning_rate,episodes)
 print(weights,bias)
+
 
 
 
