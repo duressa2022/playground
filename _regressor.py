@@ -10,19 +10,19 @@ class Node:
 
 class DecisionTreeRegressor:
     def __init__(self,min_sample_split=2,max_depth=float("inf")):
-        self.min_sample_split=min_sample_split
+        self.min_sample=min_sample_split
         self.max_depth=max_depth
         self.root=None
 
     def _mean_squared_error(self,y):
-        if len(y)==0:
+        if len(y):
             return 0
         mean_y=np.mean(y)
         return np.sum((y-mean_y)**2)
     
     def _split(self,X_column,threshold):
-        left_indices=np.where(X_column<=threshold)[0]
-        right_indices=np.where(X_column>threshold)[0]
+        left_indices=np.where(X_column<=threshold)
+        right_indices=np.where(X_column>threshold)
         return left_indices,right_indices
     
     def _best_split(self,X,y):
@@ -30,7 +30,7 @@ class DecisionTreeRegressor:
         best_feature,best_threshold=None,None
         best_mse=float("inf")
 
-        baseline_mse_data=self._mean_squared_error(y)
+        baseline_mse=self._mean_squared_error(y)
 
         for feature in range(n_features):
             X_column=X[:,feature]
@@ -38,7 +38,7 @@ class DecisionTreeRegressor:
 
             for threshold in thresholds:
                 left_indices,right_indices=self._split(X_column,threshold)
-                if len(left_indices)==0 or right_indices==0:
+                if len(left_indices)==0 or len(right_indices)==0:
                     continue
                 
                 y_left,y_right=y[left_indices],y[right_indices]
@@ -48,7 +48,8 @@ class DecisionTreeRegressor:
                     best_mse=weighted_mse
                     best_feature=feature
                     best_threshold=threshold
-        if baseline_mse_data-best_mse<1e-9:
+
+        if baseline_mse-best_mse<1e-9:
             return None,None
         return best_feature,best_threshold
     
@@ -56,7 +57,7 @@ class DecisionTreeRegressor:
         n_samples,n_features=X.shape
         n_labels=len(np.unique(y))
 
-        if n_samples<self.min_sample_split or depth>=self.max_depth or n_labels==1:
+        if n_samples<self.min_sample or depth>=self.max_depth or n_labels==1:
             leaf_value=np.mean(y)
             return Node(value=leaf_value)
         
@@ -77,7 +78,6 @@ class DecisionTreeRegressor:
     def _traverse_tree(self,x,node):
         if node.value is not None:
             return node.value
-        
         if x[node.feature]<=node.threshold:
             return self._traverse_tree(x,node.left)
         else:
@@ -85,10 +85,16 @@ class DecisionTreeRegressor:
         
     def predict(self,X):
         return np.array([self._traverse_tree(x,self.root) for x in X])
-
     
+# test code 
 
+X=np.array([[1,2,3],[1,4,7],[2,5,9]])
+y=np.array([1,1,2])
 
+model=DecisionTreeRegressor(min_sample_split=2,max_depth=5)
+model.fit(X,y)
 
+test_data=np.array([[1,2,3]])
 
-    
+predictions=model.predict(test_data)
+print(predictions)
