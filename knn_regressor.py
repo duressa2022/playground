@@ -19,4 +19,3 @@ def knn_regressor(X,Y,k,xtest):
 
   
     return predictions
-        
