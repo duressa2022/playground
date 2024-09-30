@@ -160,9 +160,10 @@ class AdaptiveBoosting:
 
             total_weight=np.sum(sample_weights)
             error=np.sum(sample_weights[y!=y_pred])/total_weight
-            performance=0.5*np.log((1-error)/error)*self.learning_rate
 
-            sample_weights=sample_weights*np.exp(performance)
+            performance=0.5*np.log((1-error)/(error+1e-9))
+
+            sample_weights=self.learning_rate*sample_weights*np.exp(performance*(y_pred!=y))
             sample_weights=sample_weights/np.sum(sample_weights)
             self.estimators.append(estimator)
             self.performances.append(performance)
@@ -185,7 +186,7 @@ class AdaptiveBoosting:
 
         return np.argmax(predictions,axis=1)
     
-    
+
 
 
 
