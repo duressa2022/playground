@@ -95,8 +95,6 @@ class GradeintBoostingClassifer:
         self.max_depth=3
         self.models=[]
 
-
-
     def fit(self,X,y):
         n_samples,n_features=X.shape
         self.mean_prediction=np.mean(y)
