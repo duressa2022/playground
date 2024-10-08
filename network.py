@@ -99,10 +99,3 @@ class SimpleNetwork:
                 print(f"Epoch {epoch}, Loss: {loss}")
              
 
-
-# Test the network
-X = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-y = np.array([[1], [2], [3]])  
-
-model = SimpleNetwork(input_size=3, hidden_size1=3, hidden_size2=3, hidden_size3=3, out_size=1, learning_rate=0.01)
-model.train(X, y, epochs=1000)
